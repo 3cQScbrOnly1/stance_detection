@@ -99,7 +99,7 @@ public:
 		_left_lstm.forward(this, getPNodes(_word_char_concat, target_size + tweet_size));
 		_right_lstm.forward(this, getPNodes(_word_char_concat, target_size + tweet_size));
 
-		_activate.forward(this, &_left_lstm._hiddens_drop[target_size], &_right_lstm._hiddens_drop[target_size + tweet_size - 1]);
+		_activate.forward(this, &_left_lstm._hiddens_drop[target_size + tweet_size - 1], &_right_lstm._hiddens_drop[target_size]);
 		_output.forward(this, &_activate);
 	}
 };

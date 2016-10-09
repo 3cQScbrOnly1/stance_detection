@@ -53,20 +53,20 @@ public:
 	{
 		//first step: clear value
 		clearValue(bTrain); // compute is a must step for train, predict and cost computation
-		int max_target_input_length, max_tweet_input_length;
-		feature.m_target_words.size() > max_sentence_size ? max_target_input_length = max_sentence_size : max_target_input_length = feature.m_target_words.size();
-		feature.m_tweet_words.size() > max_sentence_size ? max_tweet_input_length = max_sentence_size : max_tweet_input_length = feature.m_tweet_words.size();
+		int target_size, tweet_size;
+		feature.m_target_words.size() > max_sentence_size ? target_size = max_sentence_size : target_size = feature.m_target_words.size();
+		feature.m_tweet_words.size() > max_sentence_size ? tweet_size = max_sentence_size : tweet_size = feature.m_tweet_words.size();
 
-		for (int i = 0; i < max_target_input_length; i++)
+		for (int i = 0; i < target_size; i++)
 			_target_word_inputs[i].forward(this, feature.m_target_words[i]);
-		for (int i = 0; i < max_tweet_input_length; i++)
+		for (int i = 0; i < tweet_size; i++)
 			_tweet_word_inputs[i].forward(this, feature.m_tweet_words[i]);
-		_target_window.forward(this, getPNodes(_target_word_inputs, max_target_input_length));
+		_target_window.forward(this, getPNodes(_target_word_inputs, target_size));
 
-		_tweet_window.forward(this, getPNodes(_tweet_word_inputs, max_tweet_input_length));
+		_tweet_window.forward(this, getPNodes(_tweet_word_inputs, tweet_size));
 
-		_max_target_pooling.forward(this, getPNodes(_target_window._outputs, max_target_input_length));
-		_max_tweet_pooling.forward(this, getPNodes(_tweet_window._outputs, max_tweet_input_length));
+		_max_target_pooling.forward(this, getPNodes(_target_window._outputs, target_size));
+		_max_tweet_pooling.forward(this, getPNodes(_tweet_window._outputs, tweet_size));
 		_activate.forward(this, &_max_target_pooling, &_max_tweet_pooling);
 		_output.forward(this, &_activate);
 	}
